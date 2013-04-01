@@ -17,12 +17,10 @@ int main ()
           hashTable[i].code = 0; 
           
           hashTable[i].lineNum = malloc(HASH_SIZE);
-          //for(j = 0; j < HASH_SIZE; j++)
-            //    hashTable[i].lineNum[j] = '\0';
+          memset(hashTable[i].lineNum, '\0', HASH_SIZE);
           
           hashTable[i].lexOrder = malloc(HASH_SIZE); 
-          //for(j = 0; j < HASH_SIZE; j++)
-            //    hashTable[i].lexOrder[j] = '\0';   
+          memset(hashTable[i].lexOrder, '\0', HASH_SIZE);  
     }
     
     printf("Enter a file name (name.ext): ");

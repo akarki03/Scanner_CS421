@@ -19,6 +19,7 @@ void ReadFile(char *filename, Token table[])
            brkLine(line, &boolVal, table, lineNum);
            
            lineNum++;
+           //system("pause");
      }
      
      free(line);     
@@ -74,10 +75,17 @@ void brkLine(char *line, int *boolVal, Token table[], int lineNum)
 void brkToken(char *word, Token table[], int lineVar, int *lineIndex)
 {
      char *ident = malloc(sizeof(char) * 16);
+     memset(ident, '\0', 16);
      char *readVal = malloc(sizeof(char) * 16);
+     memset(readVal, '\0', 16);
      char *writeVal = malloc(sizeof(char) * 16);
+     memset(writeVal, '\0', 16);
      char *commaVal = malloc(sizeof(char) * 16);
+     memset(commaVal, '\0', 16);
      char *semicVal = malloc(sizeof(char) * 16);
+     memset(semicVal, '\0', 16);
+     char *intVal = malloc(sizeof(int) * 20);
+     memset(intVal, '\0', 16);
      
      int indexOfToken = 0; //token.lineNum & token.lexOrder
      
@@ -104,8 +112,15 @@ void brkToken(char *word, Token table[], int lineVar, int *lineIndex)
                       table[hashIndex(word)].lineNum[indexOfToken] = lineVar;
                       table[hashIndex(word)].lexOrder[indexOfToken] = *lineIndex;
                       indexOfToken = indexOfToken + 1;
+                      *lineIndex = *lineIndex + 1;
              }
-             *lineIndex = *lineIndex + 1;
+             else
+             {
+                   printf("%s\n", "Invalid Identifier");
+                   getchar();
+                   //exit(0);  
+             }
+             
              
      }
      
@@ -163,6 +178,8 @@ void brkToken(char *word, Token table[], int lineVar, int *lineIndex)
          if (valid != 1)
          {
             printf("%s\n", "Invalid Identifier");
+            getchar();
+            //exit(0);
          }
          else
          {
@@ -215,6 +232,8 @@ void brkToken(char *word, Token table[], int lineVar, int *lineIndex)
           if (valid != 1)
           {
             printf("%s\n", "Invalid Identifier");
+            getchar();
+            //exit(0);
           }
           else
           {
@@ -240,7 +259,7 @@ void brkToken(char *word, Token table[], int lineVar, int *lineIndex)
           
      } //end write(value)
      
-     if((word[strlen(word)-1] == ';') && (word[strlen(word)-2] != ')'))
+     if((word[strlen(word)-1] == ';') && (isalpha(word[strlen(word) - 2])))
      {    
           int boolInt = 1;
           int a, b = 0;
@@ -253,6 +272,8 @@ void brkToken(char *word, Token table[], int lineVar, int *lineIndex)
           if (valid != 1)
           {
             printf("%s\n", "Invalid Identifier");
+            getchar();
+            //exit(0);
           }
           else
           {
@@ -265,7 +286,7 @@ void brkToken(char *word, Token table[], int lineVar, int *lineIndex)
           }
                                  
      }
-     else if((word[strlen(word)-1] == ';') && (word[strlen(word)-2] != ')'))
+     else if((word[strlen(word)-1] == ';') && (word[strlen(word)-2] == ')'))
      {
           table[hashIndex(word)].token = ";";
           table[hashIndex(word)].code =  codeFinder(";");             
@@ -273,6 +294,21 @@ void brkToken(char *word, Token table[], int lineVar, int *lineIndex)
           table[hashIndex(word)].lexOrder[indexOfToken] = *lineIndex;
           indexOfToken = indexOfToken + 1;
           *lineIndex = *lineIndex + 1;       
+     }
+     else if((word[strlen(word)-1] == ';') && (isdigit(word[strlen(word)-2] - 48)))
+     {
+          int a, b = 0;
+          for(a = 0; a < (strlen(word) - 1); a++)
+          {
+                intVal[b] = word[a];
+                b = b + 1;
+          } 
+          table[hashIndex(word)].token = "intVal";
+          table[hashIndex(word)].code =  23;             
+          table[hashIndex(word)].lineNum[indexOfToken] = lineVar;
+          table[hashIndex(word)].lexOrder[indexOfToken] = *lineIndex;
+          indexOfToken = indexOfToken + 1;
+          *lineIndex = *lineIndex + 1;        
      }
      if(word[strlen(word)-1] == '.')
      {
@@ -292,7 +328,7 @@ void brkToken(char *word, Token table[], int lineVar, int *lineIndex)
          indexOfToken = indexOfToken + 1;
          *lineIndex = *lineIndex + 1;
      }
-          if(word[0] == '*')
+     if(word[0] == '*')
      {
          table[hashIndex(word)].token = "*";
          table[hashIndex(word)].code =  codeFinder(word);             
@@ -301,7 +337,7 @@ void brkToken(char *word, Token table[], int lineVar, int *lineIndex)
          indexOfToken = indexOfToken + 1;
          *lineIndex = *lineIndex + 1;
      }
-          if(word[0] == '-')
+     if(word[0] == '-')
      {
          table[hashIndex(word)].token = "-";
          table[hashIndex(word)].code =  codeFinder(word);             
@@ -310,19 +346,42 @@ void brkToken(char *word, Token table[], int lineVar, int *lineIndex)
          indexOfToken = indexOfToken + 1;
          *lineIndex = *lineIndex + 1;
      }
-          if(word[strlen(word) - 1] == ',')
+     if(word[strlen(word) - 1] == ',')
      {
-         table[hashIndex(word)].token = ","; 
-         table[hashIndex(word)].code =  codeFinder(",");            
-         table[hashIndex(word)].lineNum[indexOfToken] = lineVar;
-         table[hashIndex(word)].lexOrder[indexOfToken] = *lineIndex;
-         indexOfToken = indexOfToken + 1;
-         *lineIndex = *lineIndex + 1;
+          int boolInt = 1;
+          int a, b = 0;
+          for(a = 0; a < (strlen(word) - 1); a++)
+          {
+                commaVal[b] = word[a];
+                b = b + 1;
+          }
+          valid = validIden(commaVal);
+          if (valid != 1)
+          {
+            printf("%s\n", "Invalid Identifier");
+            getchar();
+            //exit(0);
+          }
+          else
+          {
+              table[hashIndex(word)].token = commaVal;
+              table[hashIndex(word)].code =  codeFinder(commaVal);             
+              table[hashIndex(word)].lineNum[indexOfToken] = lineVar;
+              table[hashIndex(word)].lexOrder[indexOfToken] = *lineIndex;
+              indexOfToken = indexOfToken + 1;
+              *lineIndex = *lineIndex + 1;
+          }
      }
         
      //printf("%s\n", word);    
      
+
      free(ident);
+     free(semicVal);
+     free(readVal);
+     free(writeVal);
+     free(commaVal);
+     free(intVal);   
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -388,11 +447,14 @@ void outHash(Token table[])
      for(k = 0; k < 25; k++)
      {
           outTable[k].ident = malloc(sizeof(char) * 16);
+          int q;
+          for(q = 0; q < 16; q++)
+                outTable[k].ident[q] = '\0';
           outTable[k].outCode = 0;
           outTable[k].outIndex = 0;       
      }
      
-     int i, j = 0, line = 1, t, w, a = 0, z, b = 0;
+     int i, j = 0, line = 1, a = 0, z, b = 0;
      for(z = 0; z < HASH_SIZE; z++)
      {
          for( i = 0; i < HASH_SIZE; i++)
@@ -434,6 +496,18 @@ void outHash(Token table[])
               
          line = line + 1;
      }
+     
+     for(i = 0; i < 25; i++)
+    {
+          int q; 
+          for(q = 0; q < 16; q++)
+                outTable[i].ident[q] = '\0';
+          outTable[i].outCode = '\0';
+          outTable[i].outIndex = '\0'; 
+ 
+    }
+    
+    free(outTable);
        
        //exit outHash     
 }
@@ -460,8 +534,9 @@ int codeFinder(char *token)
          return 3;
     else if(token == "END")
          return 4;
-    else if(token == "END.")
-         return 5;
+    else if(token == "END."){
+         printf("error");
+         return 5;}
     else if(token == "INTEGER")
          return 6;
     else if(token == "FOR")
