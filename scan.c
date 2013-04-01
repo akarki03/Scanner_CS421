@@ -76,6 +76,8 @@ void brkToken(char *word, Token table[], int lineVar, int *lineIndex)
      char *ident = malloc(sizeof(char) * 16);
      char *readVal = malloc(sizeof(char) * 16);
      char *writeVal = malloc(sizeof(char) * 16);
+     char *commaVal = malloc(sizeof(char) * 16);
+     char *semicVal = malloc(sizeof(char) * 16);
      
      int indexOfToken = 0; //token.lineNum & token.lexOrder
      
@@ -238,19 +240,44 @@ void brkToken(char *word, Token table[], int lineVar, int *lineIndex)
           
      } //end write(value)
      
-     if(word[strlen(word)-1] == ';')
+     if((word[strlen(word)-1] == ';') && ((strncmp("READ", word, 4) != 0) || strncmp("WRITE", word, 5) != 0))
+     {    
+          int boolInt = 1;
+          int a, b = 0;
+          for(a = 0; a < (strlen(word) - 1); a++)
+          {
+                semicVal[b] = word[a];
+                b = b + 1;
+          }
+          valid = validIden(semicVal);
+          if (valid != 1)
+          {
+            printf("%s\n", "Invalid Identifier");
+          }
+          else
+          {
+              table[hashIndex(word)].token = semicVal;
+              table[hashIndex(word)].code =  codeFinder(semicVal);             
+              table[hashIndex(word)].lineNum[indexOfToken] = lineVar;
+              table[hashIndex(word)].lexOrder[indexOfToken] = *lineIndex;
+              indexOfToken = indexOfToken + 1;
+              *lineIndex = *lineIndex + 1;
+          }
+                                 
+     }
+     else if(word[strlen(word)-1] == ';')
      {
           table[hashIndex(word)].token = ";";
           table[hashIndex(word)].code =  codeFinder(";");             
           table[hashIndex(word)].lineNum[indexOfToken] = lineVar;
           table[hashIndex(word)].lexOrder[indexOfToken] = *lineIndex;
           indexOfToken = indexOfToken + 1;
-          *lineIndex = *lineIndex + 1;     
+          *lineIndex = *lineIndex + 1;       
      }
      if(word[strlen(word)-1] == '.')
      {
-         table[hashIndex(word)].token = ".";
-         table[hashIndex(word)].code =  codeFinder(".");             
+         table[hashIndex(word)].token = (word);
+         table[hashIndex(word)].code =  codeFinder(word);             
          table[hashIndex(word)].lineNum[indexOfToken] = lineVar;
          table[hashIndex(word)].lexOrder[indexOfToken] = *lineIndex;
          indexOfToken = indexOfToken + 1;
