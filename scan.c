@@ -240,7 +240,7 @@ void brkToken(char *word, Token table[], int lineVar, int *lineIndex)
           
      } //end write(value)
      
-     if((word[strlen(word)-1] == ';') && ((strncmp("READ", word, 4) != 0) || strncmp("WRITE", word, 5) != 0))
+     if((word[strlen(word)-1] == ';') && (word[strlen(word)-2] != ')'))
      {    
           int boolInt = 1;
           int a, b = 0;
@@ -265,7 +265,7 @@ void brkToken(char *word, Token table[], int lineVar, int *lineIndex)
           }
                                  
      }
-     else if(word[strlen(word)-1] == ';')
+     else if((word[strlen(word)-1] == ';') && (word[strlen(word)-2] != ')'))
      {
           table[hashIndex(word)].token = ";";
           table[hashIndex(word)].code =  codeFinder(";");             
