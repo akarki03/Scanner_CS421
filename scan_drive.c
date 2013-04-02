@@ -10,9 +10,8 @@ int main ()
     
     for(i = 0; i < HASH_SIZE; i++)
     {
-          hashTable[i].token = malloc(HASH_SIZE);
-          for(j = 0; j < HASH_SIZE; j++)
-                hashTable[i].token[j] = '\0';
+          hashTable[i].token = malloc(sizeof(char) * 16);
+          memset(hashTable[i].token, '\0', 16);
           
           hashTable[i].code = 0; 
           
@@ -26,22 +25,17 @@ int main ()
     printf("Enter a file name (name.ext): ");
     scanf("%s",filename);
     
-    ReadFile(filename, hashTable);  
-
-//==============================================================================
-//Free Memory    
-      for(i = 0; i < HASH_SIZE; i++)
-    {
-          free(hashTable[i].token);
-          hashTable[i].code = '\0';  
-          free(hashTable[i].lineNum);       
-          free(hashTable[i].lexOrder); 
- 
-    }
+    ReadFile(filename, hashTable);
     
-    free(hashTable);
-//==============================================================================
-  
+    /*for(i = 0; i < 41; i++){
+          printf("%s Token\n", hashTable[i].token);  
+          printf("%s Code\n", hashTable[i].code); 
+          printf("%s lineNum\n", hashTable[i].lineNum);
+          printf("%s lexOrder\n", hashTable[i].lexOrder);     
+          }
+*/
+    //outHash(hashTable);
+    
     system("pause");
     return 0;    
 }

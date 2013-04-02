@@ -34,11 +34,14 @@ typedef struct
 void ReadFile(char *filename, Token table[]);
 void brkLine(char *line, int *boolVar, Token table[], int lineNum);
 void brkToken(char *chr, Token table[], int lineNum, int *lineIndex);
-unsigned int hashIndex(char *str);
+int hashIndex(char *str);
 int checkHash(Token table[], char *word);
 
 //int arraySize(int *intVar);
 
+void insertToken(char *str, Token table[], int line, int lineIndex, int order, int orderIndex);
+
+int validHash(int hash, Token table[]);
 int codeFinder(char *token);
 int validIden(char *iden);
 void outHash(Token table[]);
