@@ -39,7 +39,7 @@ int checkHash(Token table[], char *word);
 
 //int arraySize(int *intVar);
 
-void insertToken(char *str, Token table[], int line, int lineIndex, int order, int orderIndex);
+void insertToken(char *str, Token table[], int line, int indexOfToken, int lineIndex);
 
 int validHash(int hash, Token table[]);
 int codeFinder(char *token);

@@ -27,13 +27,13 @@ int main ()
     
     ReadFile(filename, hashTable);
     
-    /*for(i = 0; i < 41; i++){
+    for(i = 0; i < 41; i++){
           printf("%s Token\n", hashTable[i].token);  
-          printf("%s Code\n", hashTable[i].code); 
-          printf("%s lineNum\n", hashTable[i].lineNum);
-          printf("%s lexOrder\n", hashTable[i].lexOrder);     
+          //printf("%s Code\n", hashTable[i].code); 
+          //printf("%s lineNum\n", hashTable[i].lineNum);
+          //printf("%s lexOrder\n", hashTable[i].lexOrder);     
           }
-*/
+
     //outHash(hashTable);
     
     system("pause");

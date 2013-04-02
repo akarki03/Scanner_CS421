@@ -111,11 +111,8 @@ void brkToken(char *word, Token table[], int lineVar, int *lineIndex)
      {
              if(validIden(word) == 1)
              {        
-                      hashValue = validHash(hashIndex(word), table);  
-                      table[hashValue].token = word;            
-                      table[hashValue].code =  codeFinder(word);
-                      table[hashValue].lineNum[indexOfToken] = lineVar;
-                      table[hashValue].lexOrder[indexOfToken] = *lineIndex;
+                      insertToken(word, table, lineVar, indexOfToken, *lineIndex);
+                      
                       indexOfToken = indexOfToken + 1;
                       *lineIndex = *lineIndex + 1;
              }
@@ -127,46 +124,32 @@ void brkToken(char *word, Token table[], int lineVar, int *lineIndex)
              }            
      }
      
-     //printf("%u\n", strncmp("read", word, 4));
-     
      if((word[0] == ':') && (word[1] == '='))
      {
-          hashValue = validHash(hashIndex(word), table);       
-          table[hashValue].token = word;    
-          table[hashValue].code =  codeFinder(word);         
-          table[hashValue].lineNum[indexOfToken] = lineVar;
-          table[hashValue].lexOrder[indexOfToken] = *lineIndex;
+          insertToken(word, table, lineVar, indexOfToken, *lineIndex);
+          
           indexOfToken = indexOfToken + 1;  
           *lineIndex = *lineIndex + 1;          
      }
      else if((word[0] == ':') && (word[1] == '\0'))
      {
-          hashValue = validHash(hashIndex(word), table);
-          table[hashValue].token = word;
-          table[hashValue].code =  codeFinder(word);             
-          table[hashValue].lineNum[indexOfToken] = lineVar;
-          table[hashValue].lexOrder[indexOfToken] = *lineIndex;
+          insertToken(word, table, lineVar, indexOfToken, *lineIndex);
+          
           indexOfToken = indexOfToken + 1;
           *lineIndex = *lineIndex + 1;     
      }
-     
-     
+   
      if( strncmp("READ", word, 4) == 0)
      {
-          hashValue = validHash(hashIndex("READ"), table);
-          table[hashValue].token = "READ";
-          table[hashValue].code =  codeFinder("READ");             
-          table[hashValue].lineNum[indexOfToken] = lineVar;
-          table[hashValue].lexOrder[indexOfToken] = *lineIndex;
+          insertToken("READ", table, lineVar, indexOfToken, *lineIndex);
+          
           indexOfToken = indexOfToken + 1;
           *lineIndex = *lineIndex + 1;
          
          if(word[4] == '(')
          {
-              table[hashIndex(word)].token = "("; 
-              table[hashIndex(word)].code =  codeFinder("(");            
-              table[hashIndex(word)].lineNum[indexOfToken] = lineVar;
-              table[hashIndex(word)].lexOrder[indexOfToken] = *lineIndex;
+              insertToken("(", table, lineVar, indexOfToken, *lineIndex);
+              
               indexOfToken = indexOfToken + 1;
               *lineIndex = *lineIndex + 1;           
          }
@@ -189,19 +172,15 @@ void brkToken(char *word, Token table[], int lineVar, int *lineIndex)
          }
          else
          {
-              table[hashIndex(word)].token = readVal;
-              table[hashIndex(word)].code =  codeFinder(readVal);             
-              table[hashIndex(word)].lineNum[indexOfToken] = lineVar;
-              table[hashIndex(word)].lexOrder[indexOfToken] = *lineIndex;
+              insertToken(readVal, table, lineVar, indexOfToken, *lineIndex);
+              
               indexOfToken = indexOfToken + 1;
               *lineIndex = *lineIndex + 1;
          }
          if(word[strlen(word) - 2] == ')')
          {
-              table[hashIndex(word)].token = ")";
-              table[hashIndex(word)].code =  codeFinder(")");             
-              table[hashIndex(word)].lineNum[indexOfToken] = lineVar;
-              table[hashIndex(word)].lexOrder[indexOfToken] = *lineIndex;
+              insertToken(")", table, lineVar, indexOfToken, *lineIndex);
+              
               indexOfToken = indexOfToken + 1;
               *lineIndex = *lineIndex + 1;                                       
          }
@@ -210,19 +189,15 @@ void brkToken(char *word, Token table[], int lineVar, int *lineIndex)
      
      if(strncmp("WRITE", word, 5) == 0)
      {
-          table[hashIndex(word)].token = "WRITE";
-          table[hashIndex(word)].code =  codeFinder("WRITE");             
-          table[hashIndex(word)].lineNum[indexOfToken] = lineVar;
-          table[hashIndex(word)].lexOrder[indexOfToken] = *lineIndex;
+          insertToken("WRITE", table, lineVar, indexOfToken, *lineIndex);
+          
           indexOfToken = indexOfToken + 1;
           *lineIndex = *lineIndex + 1;
           
           if(word[5] == '(')
           {
-              table[hashIndex(word)].token = "(";
-              table[hashIndex(word)].code =  codeFinder(")");             
-              table[hashIndex(word)].lineNum[indexOfToken] = lineVar;
-              table[hashIndex(word)].lexOrder[indexOfToken] = *lineIndex;
+              insertToken("(", table, lineVar, indexOfToken, *lineIndex);
+              
               indexOfToken = indexOfToken + 1;
               *lineIndex = *lineIndex + 1;           
           }
@@ -243,10 +218,8 @@ void brkToken(char *word, Token table[], int lineVar, int *lineIndex)
           }
           else
           {
-              table[hashIndex(word)].token = writeVal;
-              table[hashIndex(word)].code =  codeFinder(writeVal);             
-              table[hashIndex(word)].lineNum[indexOfToken] = lineVar;
-              table[hashIndex(word)].lexOrder[indexOfToken] = *lineIndex;
+              insertToken(writeVal, table, lineVar, indexOfToken, *lineIndex);
+              
               indexOfToken = indexOfToken + 1;
               *lineIndex = *lineIndex + 1;
           } 
@@ -255,15 +228,13 @@ void brkToken(char *word, Token table[], int lineVar, int *lineIndex)
               
           if(word[strlen(word) - 2] == ')' || word[strlen(word) - 1] == ')')
           {
-              table[hashIndex(word)].token = ")";
-              table[hashIndex(word)].code =  codeFinder(")");             
-              table[hashIndex(word)].lineNum[indexOfToken] = lineVar;
-              table[hashIndex(word)].lexOrder[indexOfToken] = *lineIndex;
+              insertToken(")", table, lineVar, indexOfToken, *lineIndex);
+              
               indexOfToken = indexOfToken + 1;
               *lineIndex = *lineIndex + 1;
           }
           
-     } //end write(value)
+     } 
      
      if((word[strlen(word)-1] == ';') && (isalpha(word[strlen(word) - 2])))
      {    
@@ -283,10 +254,8 @@ void brkToken(char *word, Token table[], int lineVar, int *lineIndex)
           }
           else
           {
-              table[hashIndex(word)].token = semicVal;
-              table[hashIndex(word)].code =  codeFinder(semicVal);             
-              table[hashIndex(word)].lineNum[indexOfToken] = lineVar;
-              table[hashIndex(word)].lexOrder[indexOfToken] = *lineIndex;
+              insertToken(semicVal, table, lineVar, indexOfToken, *lineIndex);
+              
               indexOfToken = indexOfToken + 1;
               *lineIndex = *lineIndex + 1;
           }
@@ -294,10 +263,8 @@ void brkToken(char *word, Token table[], int lineVar, int *lineIndex)
      }
      else if((word[strlen(word)-1] == ';') && (word[strlen(word)-2] == ')'))
      {
-          table[hashIndex(word)].token = ";";
-          table[hashIndex(word)].code =  codeFinder(";");             
-          table[hashIndex(word)].lineNum[indexOfToken] = lineVar;
-          table[hashIndex(word)].lexOrder[indexOfToken] = *lineIndex;
+          insertToken(";", table, lineVar, indexOfToken, *lineIndex);
+          
           indexOfToken = indexOfToken + 1;
           *lineIndex = *lineIndex + 1;       
      }
@@ -309,46 +276,36 @@ void brkToken(char *word, Token table[], int lineVar, int *lineIndex)
                 intVal[b] = word[a];
                 b = b + 1;
           } 
-          table[hashIndex(word)].token = "intVal";
-          table[hashIndex(word)].code =  23;             
-          table[hashIndex(word)].lineNum[indexOfToken] = lineVar;
-          table[hashIndex(word)].lexOrder[indexOfToken] = *lineIndex;
+          insertToken(intVal, table, lineVar, indexOfToken, *lineIndex);
+          
           indexOfToken = indexOfToken + 1;
           *lineIndex = *lineIndex + 1;        
      }
      if(word[strlen(word)-1] == '.')
      {
-         table[hashIndex(word)].token = (word);
-         table[hashIndex(word)].code =  codeFinder(word);             
-         table[hashIndex(word)].lineNum[indexOfToken] = lineVar;
-         table[hashIndex(word)].lexOrder[indexOfToken] = *lineIndex;
+         insertToken(word, table, lineVar, indexOfToken, *lineIndex);
+         
          indexOfToken = indexOfToken + 1;
          *lineIndex = *lineIndex + 1;
      }
      if(word[0] == '+')
      {
-         table[hashIndex(word)].token = "+";
-         table[hashIndex(word)].code =  codeFinder(word);             
-         table[hashIndex(word)].lineNum[indexOfToken] = lineVar;
-         table[hashIndex(word)].lexOrder[indexOfToken] = *lineIndex;
+         insertToken("+", table, lineVar, indexOfToken, *lineIndex);
+         
          indexOfToken = indexOfToken + 1;
          *lineIndex = *lineIndex + 1;
      }
      if(word[0] == '*')
      {
-         table[hashIndex(word)].token = "*";
-         table[hashIndex(word)].code =  codeFinder(word);             
-         table[hashIndex(word)].lineNum[indexOfToken] = lineVar;
-         table[hashIndex(word)].lexOrder[indexOfToken] = *lineIndex;
+         insertToken("*", table, lineVar, indexOfToken, *lineIndex);
+         
          indexOfToken = indexOfToken + 1;
          *lineIndex = *lineIndex + 1;
      }
      if(word[0] == '-')
      {
-         table[hashIndex(word)].token = "-";
-         table[hashIndex(word)].code =  codeFinder(word);             
-         table[hashIndex(word)].lineNum[indexOfToken] = lineVar;
-         table[hashIndex(word)].lexOrder[indexOfToken] = *lineIndex;
+         insertToken("-", table, lineVar, indexOfToken, *lineIndex);
+         
          indexOfToken = indexOfToken + 1;
          *lineIndex = *lineIndex + 1;
      }
@@ -370,10 +327,8 @@ void brkToken(char *word, Token table[], int lineVar, int *lineIndex)
           }
           else
           {
-              table[hashIndex(word)].token = commaVal;
-              table[hashIndex(word)].code =  codeFinder(commaVal);             
-              table[hashIndex(word)].lineNum[indexOfToken] = lineVar;
-              table[hashIndex(word)].lexOrder[indexOfToken] = *lineIndex;
+              insertToken(commaVal, table, lineVar, indexOfToken, *lineIndex);
+              
               indexOfToken = indexOfToken + 1;
               *lineIndex = *lineIndex + 1;
           }
@@ -599,16 +554,8 @@ int validHash(int hash, Token table[])
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-
-void insertToken(char *str, Token table[], int line, int lineIndex, int order, int orderIndex)
+void insertToken(char *str, Token table[], int line, int indexOfToken, int lineIndex)
 {
-     /*
-     hashValue = validHash(hashIndex(word), table);  
-     table[hashValue].token = word;            
-     table[hashValue].code =  codeFinder(word);
-     table[hashValue].lineNum[indexOfToken] = lineVar;
-     table[hashValue].lexOrder[indexOfToken] = *lineIndex;
-     */
      int boolVar = 0;
      int hashValue = 0;
      int i, index = 0;
@@ -625,19 +572,15 @@ void insertToken(char *str, Token table[], int line, int lineIndex, int order, i
      {
           table[index].token = str;
           table[index].code = codeFinder(str);
-          table[index].lineNum[lineIndex] = line;
-          table[index].lexOrder[orderIndex] = order;                 
+          table[index].lineNum[indexOfToken] = line;
+          table[index].lexOrder[indexOfToken] = lineIndex;                 
      }
      else
      {
          hashValue = validHash(hashIndex(str), table);  
          table[hashValue].token = str;            
          table[hashValue].code =  codeFinder(str);
-         table[hashValue].lineNum[lineIndex] = line;
-         table[hashValue].lexOrder[orderIndex] = order;
-     }
-     
-     
-     
-     
+         table[hashValue].lineNum[indexOfToken] = line;
+         table[hashValue].lexOrder[indexOfToken] = lineIndex;
+     }     
 }
